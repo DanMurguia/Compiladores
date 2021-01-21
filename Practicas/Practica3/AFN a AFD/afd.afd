@@ -1,0 +1,4 @@
+inicial:A
+finales: B
+A->B,a
+B->C,b
