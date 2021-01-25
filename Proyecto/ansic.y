@@ -409,7 +409,7 @@ declarador_abstracto_directo
 	;
 
 inicializador
-	: expresion_asignacion {$1:$1}
+	: expresion_asignacion {$$=$1}
 	| '{' lista_inicializadores '}' {$$=$2;}
 	| '{' lista_inicializadores ',' '}'		{$$=$2}
 	;
