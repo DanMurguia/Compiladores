@@ -168,7 +168,7 @@ expresion_relacional
 	;
 
 expresion_igualdad
-	: expresion_relacional 	{$$ = $1}
+	: expresion_relacional 	{$$ = $1;}
 	| expresion_igualdad OP_IGUAL expresion_relacional 	{strcat($1,$2);strcat($1,$3);$$=$1;}
 	| expresion_igualdad OP_DIF expresion_relacional 	{strcat($1,$2);strcat($1,$3);$$=$1;}
 	;
@@ -209,7 +209,7 @@ expresion_asignacion
 	;
 
 operador_asignacion
-	: '=' {$$ =$1}
+	: '=' {$$ =$1;}
 	| ASIGNACION_MUL 	{$$=$1;}
 	| ASIGNACION_DIV 	{$$=$1;}
 	| ASIGNACION_MOD 	{$$=$1;}
@@ -397,7 +397,7 @@ declarador_abstracto
 	;
 
 declarador_abstracto_directo
-	: '(' declarador_abstracto ')'  		{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;} 		{strcat($1," ");strcat($1,$3);$$=$1;}
+	: '(' declarador_abstracto ')'  		{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;} 
 	| '[' ']'  			{strcat($1,$2);$$=$1;}
 	| '[' expresion_constante ']' 					{strcat($1,"[");strcat($1,$3);strcat($1,"]");$$=$1;}
 	| declarador_abstracto_directo '[' ']' 			{strcat($1,"[]");$$=$1;}
@@ -466,25 +466,25 @@ afirmacion_iteracion
 	: WHILE '(' expresion ')' afirmacion 				{strcat($1,"(");strcat($1,$3);strcat($1,")");strcat($1,$5);$$=$1;}
 	| DO afirmacion WHILE '(' expresion ')' ';' 		{strcat($1,"(");strcat($1,$3);strcat($1,")");strcat($1,$5);$$=$1;}
 	| FOR '(' afirmacion_expresion afirmacion_expresion ')' afirmacion 			{$$=$1;}
-	| FOR '(' afirmacion_expresion afirmacion_expresion expresion ')' afirmacion 		{$$=$1}
+	| FOR '(' afirmacion_expresion afirmacion_expresion expresion ')' afirmacion 		{$$=$1;}
 	;
 
 afirmacion_salto
-	: GOTO IDENTIFICADOR ';' 	{$$=$1}
-	| CONTINUE ';'				{$$=$1}
-	| BREAK ';'					{$$=$1}
-	| RETURN ';' 				{$$=$1}
-	| RETURN expresion ';'		{$$=$1}
+	: GOTO IDENTIFICADOR ';' 	{$$=$1;}
+	| CONTINUE ';'				{$$=$1;}
+	| BREAK ';'					{$$=$1;}
+	| RETURN ';' 				{$$=$1;}
+	| RETURN expresion ';'		{$$=$1;}
 	;
 
 unidad_traduccion
-	: declaracion_externa 		{$$=$1}
+	: declaracion_externa 		{$$=$1;}
 	| unidad_traduccion declaracion_externa 	{strcat($1,$2);$$=$1;}
 	;
 
 declaracion_externa
-	: definicion_funcion 		{$$=$1}
-	| declaracion 				{$$=$1}
+	: definicion_funcion 		{$$=$1;}
+	| declaracion 				{$$=$1;}
 	;
 
 definicion_funcion
