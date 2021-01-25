@@ -26,6 +26,71 @@
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
+%type <valor> expresion_primaria
+%type <valor> expresion_postfija
+%type <valor> lista_expresiones_argumentos
+%type <valor> expresion_unaria
+%type <valor> operador_unario
+%type <valor> expresion_cast
+%type <valor> expresion_multiplicativa
+%type <valor> expresion_aditiva
+%type <valor> expresion_cambio
+%type <valor> expresion_relacional
+%type <valor> expresion_igualdad
+%type <valor> expresion_and
+%type <valor> expresion_or_exclusivo
+%type <valor> expresion_or_inclusivo
+%type <valor> expresion_logica_and
+%type <valor> expresion_logica_or
+%type <valor> expresion_condicional
+%type <valor> expresion_asignacion
+%type <valor> operador_asignacion
+%type <valor> expresion
+%type <valor> expresion_constante
+%type <valor> declaracion
+%type <valor> especificador_declaracion
+%type <valor> lista_declaradores_inicializacion
+%type <valor> declarador_inicializacion
+%type <valor> especificador_clase_almacenamiento
+%type <valor> especificador_tipo
+%type <valor> especificador_estructura_o_union
+%type <valor> estructura_o_union
+%type <valor> lista_declaraciones_estructura
+%type <valor> declaracion_estructura
+%type <valor> lista_calificadores_especificador
+%type <valor> lista_declaradores_estructura
+%type <valor> declarador_estructura
+%type <valor> especificador_enum
+%type <valor> lista_enumeradores
+%type <valor> enumerador
+%type <valor> calificador_tipo
+%type <valor> declarador
+%type <valor> declarador_directo
+%type <valor> puntero
+%type <valor> lista_calificadores_tipo
+%type <valor> lista_parametros_tipo
+%type <valor> lista_parametros
+%type <valor> declaracion_parametro
+%type <valor> lista_identificadores
+%type <valor> declarador_abstracto
+%type <valor> declarador_abstracto_directo
+%type <valor> inicializador
+%type <valor> lista_inicializadores
+%type <valor> afirmacion
+%type <valor> afirmacion_etiquetada
+%type <valor> afirmacion_compuesta
+%type <valor> lista_declaraciones
+%type <valor> lista_afirmaciones
+%type <valor> afirmacion_expresion
+%type <valor> afirmacion_seleccion
+%type <valor> afirmacion_iteracion
+%type <valor> afirmacion_salto
+%type <valor> unidad_traduccion
+%type <valor> declaracion_externa
+%type <valor> definicion_funcion
+
+
+
 %start unidad_traduccion
 %%
 
@@ -40,7 +105,7 @@ expresion_postfija
 	: expresion_primaria {$$ = $1;}
 	| expresion_postfija '[' expresion ']'	{strcat($1,"[");strcat($1,$3);strcat($1,"]");$$=$1;}
 	| expresion_postfija '(' ')' 			{strcat($1,"()");$$ = $1;}
-	| expresion_postfija '(' lista_expresiones_argumentos ')'		strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;}
+	| expresion_postfija '(' lista_expresiones_argumentos ')'		{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;}
 	| expresion_postfija '.' IDENTIFICADOR    	{strcat($1,".");strcat($1,$3);$$=$1;}
 	| expresion_postfija OP_PTR IDENTIFICADOR   {strcat($1," ");strcat($1,$2);strcat($1," ";strcat($1,$3));$$=$1;}
 	| expresion_postfija OP_INC	{strcat($1," ");strcat($1,$2);$$=$1;}
@@ -65,11 +130,7 @@ operador_unario
 	: '&'	{$$=$1;}
 	| '*'	{$$=$1;}
 	| '+'	{$$=$1;}
-	| '-'	{$$=$1;}$1,")");$$=$1;}
-      |             ^~
-ansic.y:43.127: error: syntax error, unexpected =
-   43 | ...1,")");$$=$1;}
-
+	| '-'	{$$=$1;}
 	| '~'	{$$=$1;}
 	| '!'	{$$=$1;}
 	;
