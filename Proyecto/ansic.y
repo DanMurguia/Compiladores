@@ -1,7 +1,7 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	$include <string.h>
+	#include <string.h>
 
 	void yyerror(char *mensaje){
 		printf("ERROR: %s\n", mensaje);
