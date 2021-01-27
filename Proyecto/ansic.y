@@ -14,17 +14,18 @@
 	char *valor;
 }
 
-%token IDENTIFICADOR CONSTANTE LITERAL_CADENA SIZEOF
-%token OP_PTR OP_INC OP_DEC OP_IZQ OP_DER OP_MENIG OP_MAYIG OP_IGUAL OP_DIF
-%token OP_AND OP_OR ASIGNACION_MUL ASIGNACION_DIV ASIGNACION_MOD ASIGNACION_SUM
-%token ASIGNACION_RES ASIGNACION_IZQ ASIGNACION_DER ASIGNACION_AND
-%token ASIGNACION_XOR ASIGNACION_OR 
+%token <valor> IDENTIFICADOR CONSTANTE LITERAL_CADENA SIZEOF
+%token <valor> OP_PTR OP_INC OP_DEC OP_IZQ OP_DER OP_MENIG OP_MAYIG OP_IGUAL OP_DIF
+%token <valor> OP_AND OP_OR ASIGNACION_MUL ASIGNACION_DIV ASIGNACION_MOD ASIGNACION_SUM
+%token <valor> ASIGNACION_RES ASIGNACION_IZQ ASIGNACION_DER ASIGNACION_AND
+%token <valor> ASIGNACION_XOR ASIGNACION_OR ';' '{' '}' ',' ':' '=' '(' ')' '[' ']'
+%token <valor> '.' '&' '!' '~' '-' '+' '*' '/' '%' '<' '>' '^' '|' '?'  
 
-%token TYPEDEF EXTERN STATIC AUTO REGISTER
-%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-%token STRUCT UNION ENUM ELLIPSIS
+%token <valor> TYPEDEF EXTERN STATIC AUTO REGISTER
+%token <valor> CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
+%token <valor> STRUCT UNION ENUM ELLIPSIS
 
-%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+%token <valor> CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
 %type <valor> expresion_primaria
 %type <valor> expresion_postfija
@@ -87,7 +88,8 @@
 %type <valor> afirmacion_salto
 %type <valor> unidad_traduccion
 %type <valor> declaracion_externa
-%type <valor> definicion_funcion
+%type <valor> definicion_funcion 
+%type <valor> nombre_tipo
 
 
 
@@ -107,7 +109,7 @@ expresion_postfija
 	| expresion_postfija '(' ')' 			{strcat($1,"()");$$ = $1;}
 	| expresion_postfija '(' lista_expresiones_argumentos ')'		{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;}
 	| expresion_postfija '.' IDENTIFICADOR    	{strcat($1,".");strcat($1,$3);$$=$1;}
-	| expresion_postfija OP_PTR IDENTIFICADOR   {strcat($1," ");strcat($1,$2);strcat($1," ";strcat($1,$3));$$=$1;}
+	| expresion_postfija OP_PTR IDENTIFICADOR   {strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
 	| expresion_postfija OP_INC	{strcat($1," ");strcat($1,$2);$$=$1;}
 	| expresion_postfija OP_DEC	{strcat($1," ");strcat($1,$2);$$=$1;}
 	;
@@ -128,7 +130,7 @@ expresion_unaria
 
 operador_unario
 	: '&'	{$$=$1;}
-	| '*'	{$$=$1;}
+	| '*'	{$$=strdup($1);}
 	| '+'	{$$=$1;}
 	| '-'	{$$=$1;}
 	| '~'	{$$=$1;}
@@ -279,7 +281,7 @@ especificador_tipo
 
 especificador_estructura_o_union
 	: estructura_o_union IDENTIFICADOR '{' lista_declaraciones_estructura '}' 	{strcat($1,$2);strcat($1,"{");strcat($1,$4);strcat($1,"}");$$=$1;} 	
-	| estructura_o_union '{' lista_declaraciones_estructura '}' 	{strcat($1,"{");strcat($1,$3);strcat($1,"}")$$=$1;}
+	| estructura_o_union '{' lista_declaraciones_estructura '}' 	{strcat($1,3);$$=$1;}
 	| estructura_o_union IDENTIFICADOR 		{strcat($1,$2);$$=$1;}
 	;
 
@@ -401,17 +403,17 @@ declarador_abstracto_directo
 	| '[' ']'  			{strcat($1,$2);$$=$1;}
 	| '[' expresion_constante ']' 					{strcat($1,"[");strcat($1,$3);strcat($1,"]");$$=$1;}
 	| declarador_abstracto_directo '[' ']' 			{strcat($1,"[]");$$=$1;}
-	| declarador_abstracto_directo '[' expresion_constante ']' 		{strcat($1,"[");strcat($1,$3);strcat($1,']');$$=$1;} 
+	| declarador_abstracto_directo '[' expresion_constante ']' 		{strcat($1,3);$$=$1;} 
 	| '(' ')' 			
 	| '(' lista_parametros_tipo ')' 			{$$=$2;}
 	| declarador_abstracto_directo '(' ')' 		{$$=$1;}
-	| declarador_abstracto_directo '(' lista_parametros_tipo ')' 		{strcat($1,"(");strcat($1,$3);strcat($1,")")$$=$1;}
+	| declarador_abstracto_directo '(' lista_parametros_tipo ')' 		{strcat($1,$3);$$=$1;}
 	;
 
 inicializador
-	: expresion_asignacion {$$=$1}
+	: expresion_asignacion {$$=$1;}
 	| '{' lista_inicializadores '}' {$$=$2;}
-	| '{' lista_inicializadores ',' '}'		{$$=$2}
+	| '{' lista_inicializadores ',' '}'		{$$=$2;}
 	;
 
 lista_inicializadores
@@ -436,8 +438,8 @@ afirmacion_etiquetada
 
 afirmacion_compuesta
 	: '{' '}'
-	| '{' lista_afirmaciones '}' 	{$$=$2}
-	| '{' lista_declaraciones '}' 	{$$=$2}
+	| '{' lista_afirmaciones '}' 	{$$=$2;}
+	| '{' lista_declaraciones '}' 	{$$=$2;}
 	| '{' lista_declaraciones lista_afirmaciones '}' {strcat($2,$3);$$=$2;}
 	;
 
@@ -453,7 +455,7 @@ lista_afirmaciones
 
 afirmacion_expresion
 	: ';' 
-	| expresion ';' 		{strcat($1,";");$$=$1;}  			{strcat($1,",");strcat($1,$3);$$=$1;}
+	| expresion ';' 		{strcat($1,";");$$=$1;}  			
 	;
 
 afirmacion_seleccion
