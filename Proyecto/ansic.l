@@ -10,7 +10,7 @@ IS			(u|U|l|L)*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ansic2.tab.h"
+#include "ansic.tab.h"
 
 %}
 

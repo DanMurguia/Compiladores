@@ -234,8 +234,8 @@ expresion_constante
 	;
 
 declaracion
-	: especificador_declaracion ';' 	{strcat($1,";");;$$=$1;}
-	| especificador_declaracion lista_declaradores_inicializacion ';' 	{strcat($1,$2);strcat($1,";");$$=$1;}
+	: especificador_declaracion ';' 	{char *tmp=strdup($1);strcpy($1,"\n\t*Declaracion: ");strcat($1,tmp);strcat($1,";");;$$=$1;}
+	| especificador_declaracion lista_declaradores_inicializacion ';' 	{char *tmp=strdup($1);strcpy($1,"\n\t*Declaracion: ");strcat($1,tmp);strcat($1," ");strcat($1,$2);strcat($1,";");$$=$1;}
 	;
 
 especificador_declaracion
@@ -348,9 +348,9 @@ declarador_directo
 	| '(' declarador ')' 			{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;} 					
 	| declarador_directo '[' expresion_constante ']'		{strcat($1,"[");strcat($1,$3);strcat($1,"]");$$=$1;}
 	| declarador_directo '[' ']' 			{strcat($1,$2);$$=$1;}
-	| declarador_directo '(' lista_parametros_tipo ')' 			{strcat($1,"()");strcat($1,$3);strcat($1,")");$$=$1;}		
+	| declarador_directo '(' lista_parametros_tipo ')' 			{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;}		
 	| declarador_directo '(' lista_identificadores ')' 			{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;}
-	| declarador_directo '(' ')' 			{strcat($1,$2);$$=$1;}
+	| declarador_directo '(' ')' 			{$$=$1;}
 	;
 
 puntero
@@ -422,12 +422,12 @@ lista_inicializadores
 	;
 
 afirmacion
-	: afirmacion_etiquetada {$$=$1;}
-	| afirmacion_compuesta 	{$$=$1;}
-	| afirmacion_expresion 	{$$=$1;}
-	| afirmacion_seleccion 	{$$=$1;}
-	| afirmacion_iteracion 	{$$=$1;}
-	| afirmacion_salto 		{$$=$1;}
+	: afirmacion_etiquetada {char *tmp=strdup($1);strcpy($1,"\n\t*Afirmacion etiquetada: ");strcat($1,tmp);$$=$1;}
+	| afirmacion_compuesta 	{char *tmp=strdup($1);strcpy($1,"\n\t*Afirmacion compuesta ");strcat($1,tmp);$$=$1;}
+	| afirmacion_expresion 	{char *tmp=strdup($1);strcpy($1,"\n\t*Afirmacion de expresion: ");strcat($1,tmp);$$=$1;}
+	| afirmacion_seleccion 	{char *tmp=strdup($1);strcpy($1,"\n\t*Afirmacion de seleccion: ");strcat($1,tmp);$$=$1;}
+	| afirmacion_iteracion 	{char *tmp=strdup($1);strcpy($1,"\n\t*Afirmacion de iteracion: ");strcat($1,tmp);$$=$1;}
+	| afirmacion_salto 		{char *tmp=strdup($1);strcpy($1,"\n\t*Afirmacion de salto: ");strcat($1,tmp);$$=$1;}
 	;
 
 afirmacion_etiquetada
@@ -465,8 +465,8 @@ afirmacion_seleccion
 	;
 
 afirmacion_iteracion
-	: WHILE '(' expresion ')' afirmacion 				{strcat($1,"(");strcat($1,$3);strcat($1,")");strcat($1,$5);$$=$1;}
-	| DO afirmacion WHILE '(' expresion ')' ';' 		{strcat($1,"(");strcat($1,$3);strcat($1,")");strcat($1,$5);$$=$1;}
+	: WHILE '(' expresion ')' afirmacion 				{$$=$1;}
+	| DO afirmacion WHILE '(' expresion ')' ';' 		{strcat($1,$3);$$=$1;}
 	| FOR '(' afirmacion_expresion afirmacion_expresion ')' afirmacion 			{$$=$1;}
 	| FOR '(' afirmacion_expresion afirmacion_expresion expresion ')' afirmacion 		{$$=$1;}
 	;
@@ -490,9 +490,9 @@ declaracion_externa
 	;
 
 definicion_funcion
-	: especificador_declaracion declarador lista_declaraciones afirmacion_compuesta {printf("Especificador de delcaración: %s\tDeclarador: %s\t Lista de declaraciones:%s\t\nAfirmacion compuesta:\n%s\n", $1,$2,$3,$4);}
-	| especificador_declaracion declarador afirmacion_compuesta {printf("Especificador de delcaración: %s\tDeclarador: %s\t\nAfirmacion compuesta:\n%s\n", $1,$2,$3);}
-	| declarador lista_declaraciones afirmacion_compuesta {printf("Declarador: %s\t Lista de declaraciones:%s\t\nAfirmacion compuesta:\n%s\n", $1,$2,$3);}
+	: especificador_declaracion declarador lista_declaraciones afirmacion_compuesta {printf("Especificador de delcaración: %s\nDeclarador: %s\n Lista de declaraciones:%s\nAfirmacion compuesta:\n%s\n", $1,$2,$3,$4);}
+	| especificador_declaracion declarador afirmacion_compuesta {printf("Especificador de delcaración: %s\nDeclarador: %s\nAfirmacion compuesta:\n%s\n", $1,$2,$3);}
+	| declarador lista_declaraciones afirmacion_compuesta {printf("Declarador: %s\n Lista de declaraciones:%s\nAfirmacion compuesta:\n%s\n", $1,$2,$3);}
 	| declarador afirmacion_compuesta {printf("Declarador: %s\nAfirmacion compuesta:\n%s\n", $1,$2);}
 	;
 

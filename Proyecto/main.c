@@ -1,4 +1,4 @@
-#include "ansic2.tab.h"
+#include "ansic.tab.h"
 
 int main(void)
 {
